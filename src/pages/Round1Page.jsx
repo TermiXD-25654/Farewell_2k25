@@ -5,8 +5,8 @@ import { Button } from '../components/ui/button.jsx';
 
 // These values will be provided by you later
 const ROUND_1_CONFIG = {
-  puzzleEmojis: '🧠🔍🧩👁️‍🗨️', // Example emoji puzzle
-  correctAnswer: 'mindful', // Example answer
+  puzzleEmojis: '🙏🏻 💦🤰 EMR ⚰ 💀', // Example emoji puzzle
+  correctAnswer: 'WELCOME TO EMR FAREWELL 2025', // Example answer
   hints: [
     'Think about what you use to solve puzzles',
     'The first emoji represents your head',
