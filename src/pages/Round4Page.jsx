@@ -5,8 +5,8 @@ import { Button } from '../components/ui/button.jsx';
 
 // These values will be provided by you later
 const ROUND_4_CONFIG = {
-  encryptedMessage: '01001000 01100101 01101100 01101100 01101111', // Example binary message
-  correctAnswer: 'hello', // Example decoded answer
+  encryptedMessage: "b'gAAAAABoAB-Av3v3zZpHQzCi_r33n3kztO4iaDG53KFIOJuvVBbh51E-BuAf5IzlhayVX87wq-5UXAlbDCoqAeNdlyTVnVRA31MnRVCQswJhgBBqwAFOu07MWmZ-2Vn1Q9nRYW7XeolJ'", // Example binary message
+  correctAnswer: 'Asla Hum bhi rakhte hai, LADDAR!', // Example decoded answer
   buttonsEscapeAttempts: 20 // After this many attempts, the button will stop moving
 };
 
@@ -17,6 +17,7 @@ const Round4Page = () => {
   const [showNextButton, setShowNextButton] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ top: 50, left: 50 });
   const [buttonEscapeCount, setButtonEscapeCount] = useState(0);
+  const [showHint, setShowHint] = useState(false);
   const buttonRef = useRef(null);
   const navigate = useNavigate();
 
@@ -46,11 +47,11 @@ const Round4Page = () => {
     const buttonHeight = buttonRef.current?.offsetHeight || 50;
 
     // Calculate random position within panel, ensuring the button stays within bounds
-    const maxLeft = panelRect.width - buttonWidth - 10; // 10px padding from the edge
-    const maxTop = panelRect.height - buttonHeight - 10; // 10px padding from the edge
+    const maxLeft = panelRect.width - buttonWidth - 100; // 10px padding from the edge
+    const maxTop = panelRect.height - buttonHeight - 100; // 10px padding from the edge
 
-    const newLeft = Math.min(panelRect.width - buttonWidth - 10, Math.max(10, Math.floor(Math.random() * maxLeft)));
-    const newTop = Math.min(panelRect.height - buttonHeight - 10, Math.max(10, Math.floor(Math.random() * maxTop)));
+    const newLeft = Math.min(panelRect.width - buttonWidth - 100, Math.max(100, Math.floor(Math.random() * maxLeft)));
+    const newTop = Math.min(panelRect.height - buttonHeight - 100, Math.max(100, Math.floor(Math.random() * maxTop)));
 
     setButtonPosition({ top: newTop + panelRect.top, left: newLeft + panelRect.left });
     setButtonEscapeCount(prev => prev + 1);
@@ -72,6 +73,40 @@ const Round4Page = () => {
         <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-300">
           Round 4: Decoded Message
         </h1>
+
+        <div className="absolute top-4 right-4">
+          <button 
+            className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-cyan-300 hover:shadow-cyan-500/50"
+            onClick={() => setShowHint(true)}
+          >
+            <span className="text-2xl text-white animate-pulse">💡</span>
+          </button>
+        </div>
+
+        {showHint && (
+          <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
+              <Button 
+                variant="destructive" 
+                className="absolute top-4 right-4"
+                onClick={() => setShowHint(false)}
+              >
+                Close
+              </Button>
+              <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
+              <div className="flex justify-center items-center">
+                <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
+                  <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
+                  <img 
+                    src="/src/assets/round4-qr-code.jpg" 
+                    alt="QR Code" 
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         
         {!isCorrect ? (
           <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-cyan-900/50 shadow-2xl animate-fade-in">
@@ -126,21 +161,7 @@ const Round4Page = () => {
                   </svg>
                   Hint:
                 </p>
-                <p className="text-gray-300">This looks like binary code. Each group of 8 bits represents a character.</p>
-                <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-gray-400">
-                  <div>
-                    <span className="text-cyan-400">01000001</span> = A
-                  </div>
-                  <div>
-                    <span className="text-cyan-400">01000010</span> = B
-                  </div>
-                  <div>
-                    <span className="text-cyan-400">01000011</span> = C
-                  </div>
-                  <div>
-                    <span className="text-cyan-400">01111010</span> = z
-                  </div>
-                </div>
+                <p className="text-gray-300">Italian Spirit.</p>
               </div>
             )}
           </div>

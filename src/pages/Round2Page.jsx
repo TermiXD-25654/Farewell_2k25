@@ -63,15 +63,22 @@ const Round2Page = () => {
   const emptyTileIndex = totalTiles - 1; // The last tile is the empty one
   
   const [tiles, setTiles] = useState([]);
-  const [completed, setCompleted] = useState(false);
+  const [completed, setCompleted] = useState(true);
+  const [showLOL, setShowLOL] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showFakeError, setShowFakeError] = useState(false);
   const [showRealButton, setShowRealButton] = useState(false);
   const [moves, setMoves] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState(1);
+  const [qrScanned, setQrScanned] = useState(false);
   const imageRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleQrScanSuccess = () => {
+    setQrScanned(true);
+    setShowHint(false);
+  };
 
   // Initialize the puzzle
   useEffect(() => {
@@ -130,9 +137,18 @@ const Round2Page = () => {
     
     // Show the real button after a delay
     setTimeout(() => {
-      setShowFakeError(false);
-      setShowRealButton(true);
+      setShowLOL(true);
     }, 20000);
+
+    setTimeout(() => {
+      setShowFakeError(false);
+     
+      setShowRealButton(true);
+    }, 25000);
+
+    
+
+
   };
 
   const handleRealNextRound = () => {
@@ -161,12 +177,47 @@ const Round2Page = () => {
       </div>
       
       {showConfetti && <Confetti recycle={false} numberOfPieces={500} gravity={0.05} />}
+
+      <div className="absolute top-4 right-4">
+        <button 
+          className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300 hover:shadow-blue-500/50"
+          onClick={() => setShowHint(true)}
+        >
+          <span className="text-2xl text-white animate-pulse">💡</span>
+        </button>
+      </div>
+
+      {showHint && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
+            <Button 
+              variant="destructive" 
+              className="absolute top-4 right-4"
+              onClick={() => setShowHint(false)}
+            >
+              Close
+            </Button>
+            <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
+            <div className="flex justify-center items-center">
+              <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
+                <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
+                <img 
+                  src="/src/assets/round2-qr-code.jpg" 
+                  alt="QR Code" 
+                  className="w-full h-full object-cover rounded-lg"
+                  onClick={handleQrScanSuccess}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="z-10 max-w-4xl w-full">
         {!showFakeError ? (
           <>
             <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-blue-900/50 shadow-2xl animate-fade-in">
-              <h1 className="text-5xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
+              <h1 className="p-2 text-5xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">
                 Round 2: Image Puzzle
               </h1>
               
@@ -181,14 +232,18 @@ const Round2Page = () => {
                     <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
                       <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full">
                         <h3 className="text-2xl font-bold mb-4 text-blue-300">Reference Image</h3>
-                        <div className="relative overflow-hidden rounded-lg mb-6">
-                          <img 
-                            src={ROUND_2_CONFIG.imagePath} 
-                            alt="Complete puzzle image" 
-                            className="w-full object-contain"
-                            ref={imageRef}
-                          />
-                        </div>
+                        {qrScanned ? (
+                          <div className="relative overflow-hidden rounded-lg mb-6">
+                            <img 
+                              src={ROUND_2_CONFIG.imagePath} 
+                              alt="Complete puzzle image" 
+                              className="w-full object-contain"
+                              ref={imageRef}
+                            />
+                          </div>
+                        ) : (
+                          <p className="text-center text-gray-300">Please scan the QR code to view the reference image.</p>
+                        )}
                         <div className="flex justify-end">
                           <Button 
                             onClick={toggleHint}
@@ -278,7 +333,7 @@ const Round2Page = () => {
                     </svg>
                   </div>
                   
-                  <h2 className="text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Congratulations! 🎉</h2>
+                  <h2 className="p-1 text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">Congratulations! 🎉</h2>
                   <p className="text-xl mb-10 text-gray-300">You've solved the image puzzle!</p>
                   
                   {!showRealButton ? (
@@ -309,7 +364,11 @@ const Round2Page = () => {
             <div className="max-w-md mx-auto">
               <p className="mb-8 text-gray-400">Oops! The page you're looking for doesn't exist.</p>
             </div>
-            <p className="text-2xl text-yellow-400 animate-pulse mt-6">LOL 😂</p>
+            {showFakeError && showLOL && (
+              <>
+                <p className="text-2xl text-yellow-400 animate-pulse mt-6 " >LOL 😂</p>
+              </>
+            )}
           </div>
         )}
       </div>

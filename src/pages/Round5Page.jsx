@@ -19,6 +19,7 @@ const Round5Page = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [secondAnswer, setSecondAnswer] = useState('');
   const [freezeTimeLeft, setFreezeTimeLeft] = useState(ROUND_5_CONFIG.freezeDuration / 1000);
+  const [showHint, setShowHint] = useState(false);
   const navigate = useNavigate();
 
   const handleFirstSubmit = (e) => {
@@ -73,14 +74,49 @@ const Round5Page = () => {
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-pink-800 opacity-10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-purple-600 opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1.2s'}}></div>
       </div>
+
+      <div className="absolute top-4 right-4">
+        <button 
+          className="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-pink-300 hover:shadow-pink-500/50"
+          onClick={() => setShowHint(true)}
+        >
+          <span className="text-2xl text-white animate-pulse">💡</span>
+        </button>
+      </div>
+
+      {showHint && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
+            <Button 
+              variant="destructive" 
+              className="absolute top-4 right-4"
+              onClick={() => setShowHint(false)}
+            >
+              Close
+            </Button>
+            <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
+            <div className="flex justify-center items-center">
+              <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
+                <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
+                <img 
+                  src="/src/assets/round5-qr-code.jpg" 
+                  alt="QR Code" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="z-10 max-w-4xl w-full">
-        <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
-          Round 5: Image Challenge
-        </h1>
         
         {!firstAttemptCorrect ? (
+          
           <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-pink-900/50 shadow-2xl animate-fade-in">
+             <h1 className="p-2 text-5xl font-bold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
+          Round 5: Image Challenge
+          </h1>
             <div className="mb-10 w-full max-w-md mx-auto">
               <div className="relative group mb-6">
                 <div className="flex justify-center items-center">
@@ -149,7 +185,8 @@ const Round5Page = () => {
             </p>
           </div>
         ) : showSecondAttempt && !isCompleted ? (
-          <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-green-900/50 shadow-2xl animate-fade-in">
+          
+          <>
             <div className="text-center mb-10">
               <div className="mb-3">
                 <svg className="w-12 h-12 mx-auto text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -160,6 +197,12 @@ const Round5Page = () => {
               <p className="text-gray-300">Sorry about that! Our website had a temporary hiccup.</p>
               <p className="text-gray-400 text-sm mt-2">Please enter your answer again to continue.</p>
             </div>
+          {/* <h1 className="p-2 text-5xl font-bold mb-10 text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">
+          Round 5: Image Challenge
+          </h1> */}
+          <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-green-900/50 shadow-2xl animate-fade-in">
+            
+          
             
             <div className="mb-10 w-full max-w-md mx-auto">
               <div className="relative group mb-6">
@@ -194,6 +237,7 @@ const Round5Page = () => {
               </form>
             </div>
           </div>
+          </>
         ) : isCompleted && (
           <div className="text-center bg-gray-800/40 backdrop-blur-md p-10 rounded-2xl border border-green-500/30 shadow-2xl animate-fade-in">
             <div className="mb-8">
@@ -231,6 +275,13 @@ const Round5Page = () => {
         @keyframes bounce {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-20px); }
+        }
+        .animate-scan-line {
+          animation: scanLine 2s infinite;
+        }
+        @keyframes scanLine {
+          0%, 100% { transform: translateY(-100%); }
+          50% { transform: translateY(100%); }
         }
       `}</style>
     </div>

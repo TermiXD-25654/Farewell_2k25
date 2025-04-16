@@ -64,6 +64,40 @@ const Round1Page = () => {
         <div className="absolute top-0 left-1/4 w-64 h-64 bg-purple-600 opacity-10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-500 opacity-10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
+
+      <div className="absolute top-4 right-4">
+        <button 
+          className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:ring-4 focus:ring-purple-300 hover:shadow-purple-500/50"
+          onClick={() => setShowHint(true)}
+        >
+          <span className="text-2xl text-white animate-pulse">💡</span>
+        </button>
+      </div>
+
+      {showHint && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
+            <Button 
+              variant="destructive" 
+              className="absolute top-4 right-4"
+              onClick={() => setShowHint(false)}
+            >
+              Close
+            </Button>
+            <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
+            <div className="flex justify-center items-center">
+              <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
+                <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
+                <img 
+                  src="/src/assets/round1-qr-code.jpg" 
+                  alt="QR Code" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="z-10 max-w-4xl w-full">
         {!showCongrats ? (

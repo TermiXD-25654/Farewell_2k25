@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
+import croreAudio from '../assets/crore.mp3';
 
 // CSS-based confetti instead of react-confetti package
 const CSSConfetti = () => {
   return (
     <div className="confetti-container">
-      {Array.from({ length: 150 }).map((_, index) => {
+      {Array.from({ length: 300 }).map((_, index) => {
         const size = Math.random() * 10 + 5;
         const left = Math.random() * 100;
         const animDuration = Math.random() * 3 + 2;
@@ -35,20 +36,59 @@ const CSSConfetti = () => {
 const Round6Page = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [celebrationStage, setCelebrationStage] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const croreRef = useRef(null);
+  // Prevent crore audio from playing more than once
+  const playedRef = useRef(false);
   const navigate = useNavigate();
+
+  // Prepare crore audio
+  useEffect(() => {
+    // Initialize incoming call croretone
+    const crore = new Audio(croreAudio);
+    crore.preload = 'auto';
+    croreRef.current = crore;
+
+    return () => {
+      // Cleanup croretone on unmount
+      if (croreRef.current) {
+        croreRef.current.pause();
+        croreRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
+  // Play crore audio at final celebration stage
+  useEffect(() => {
+    if (celebrationStage === 3 && croreRef.current && !playedRef.current) {
+      const playPromise = croreRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.error('Audio playback blocked or failed:', error);
+          console.log('Retrying audio playback on user interaction');
+          const retryAudio = () => {
+            croreRef.current.play().catch((retryError) => {
+              console.error('Retry failed:', retryError);
+            });
+            document.removeEventListener('click', retryAudio);
+          };
+          document.addEventListener('click', retryAudio);
+        });
+      }
+      playedRef.current = true;
+    }
+  }, [celebrationStage]);
 
   // Start celebration sequence
   useEffect(() => {
-    // Show confetti after a short delay
-    setTimeout(() => {
-      setShowConfetti(true);
-    }, 500);
+    // Show confetti immediately
+    setShowConfetti(true);
 
-    // Sequence of celebration stages
+    // Sequence of celebration stages, all within 3 seconds
     const stageTimers = [
-      setTimeout(() => setCelebrationStage(1), 2000),
-      setTimeout(() => setCelebrationStage(2), 4000),
-      setTimeout(() => setCelebrationStage(3), 6000),
+      setTimeout(() => setCelebrationStage(1), 1000),
+      setTimeout(() => setCelebrationStage(2), 2000),
+      setTimeout(() => setCelebrationStage(3), 3000),
     ];
 
     return () => {
@@ -65,6 +105,41 @@ const Round6Page = () => {
       {/* Show CSS confetti animation */}
       {showConfetti && <CSSConfetti />}
       
+      {/* Hint button */}
+      <div className="absolute top-4 right-4">
+        <button 
+          className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:crore-4 focus:crore-indigo-300 hover:shadow-indigo-500/50"
+          onClick={() => setShowHint(true)}
+        >
+          <span className="text-2xl text-white animate-pulse">💡</span>
+        </button>
+      </div>
+
+      {showHint && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
+            <Button 
+              variant="destructive" 
+              className="absolute top-4 right-4"
+              onClick={() => setShowHint(false)}
+            >
+              Close
+            </Button>
+            <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
+            <div className="flex justify-center items-center">
+              <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
+                <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
+                <img 
+                  src="/src/assets/round6-qr-code.jpg" 
+                  alt="QR Code" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Background animated elements */}
       <div className="absolute inset-0 overflow-hidden z-0">
         <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-indigo-600 opacity-20 rounded-full blur-3xl animate-pulse"></div>
@@ -75,7 +150,7 @@ const Round6Page = () => {
       <div className="z-10 max-w-4xl w-full text-center animate-fade-up">
         <div className="mb-8">
           <div className={`transition-all duration-1000 transform ${celebrationStage >= 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-            <h1 className="text-6xl md:text-7xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">
+            <h1 className="p-2 text-5xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">
               Congratulations! 🎉
             </h1>
           </div>

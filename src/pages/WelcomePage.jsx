@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
 import welcomeCallAudio from '../assets/welcome-call-audio.mp3';
+import profileImage from '../assets/profile-image.jpg'; // Import the profile image
+import incomingRingtone from '../assets/incoming-call-tone.mp3'; // Audio file for incoming call ringtone
 
 // Use the imported audio file directly
 const VOICE_MESSAGE_URL = welcomeCallAudio;
@@ -12,7 +14,9 @@ console.log('Audio file URL:', VOICE_MESSAGE_URL);
 const WelcomePage = () => {
   const [callState, setCallState] = useState(null);
   const [audioReady, setAudioReady] = useState(false);
+  const [showEndCallButton, setShowEndCallButton] = useState(false);
   const audioRef = useRef(null);
+  const ringtoneRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,8 +57,9 @@ const WelcomePage = () => {
     });
     
     audioElement.addEventListener('ended', () => {
-      console.log('Audio ended, setting callState to ended');
       setCallState('ended');
+      // After 1 second of showing "Call Ended", navigate to Round 1
+      setTimeout(() => navigate('/round1'), 1000);
     });
     
     // Try to load the audio file
@@ -64,9 +69,15 @@ const WelcomePage = () => {
 
     // Enable audio on first user interaction
     const enableAudio = () => {
-      const silentAudio = new Audio("data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//tUZAAAA");
+      const silentAudio = new Audio("data:audio/mp3;base64,SUQzBA...");
       silentAudio.play().then(() => {
         console.log('Audio context unlocked by user interaction');
+        // Now that audio context is unlocked, play the ringtone if available
+        if (ringtoneRef.current) {
+          ringtoneRef.current.play().catch(() => {
+            console.log('Ringtone play attempt after unlock failed');
+          });
+        }
       }).catch(e => console.log('Failed to unlock audio context', e));
       document.removeEventListener('click', enableAudio);
     };
@@ -85,9 +96,59 @@ const WelcomePage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Initialize incoming call ringtone
+    const ring = new Audio(incomingRingtone);
+    ring.preload = 'auto';
+    ring.loop = true;
+    ringtoneRef.current = ring;
+
+    return () => {
+      // Cleanup ringtone on unmount
+      if (ringtoneRef.current) {
+        ringtoneRef.current.pause();
+        ringtoneRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
+  // Play or stop ringtone based on callState
+  useEffect(() => {
+    if (callState === 'incoming') {
+      const playPromise = ringtoneRef.current?.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {
+          console.log('Ringtone play was blocked; will retry on user interaction');
+          const retryRingtone = () => {
+            ringtoneRef.current?.play().catch(() => {});
+            document.removeEventListener('click', retryRingtone);
+          };
+          document.addEventListener('click', retryRingtone);
+        });
+      }
+    } else {
+      if (ringtoneRef.current) {
+        ringtoneRef.current.pause();
+        ringtoneRef.current.currentTime = 0;
+      }
+    }
+  }, [callState]);
+
   // Log state changes
   useEffect(() => {
     console.log('Current callState:', callState);
+  }, [callState]);
+
+  useEffect(() => {
+    if (callState === 'active') {
+      const timer = setTimeout(() => {
+        setShowEndCallButton(true);
+      }, 5000); // Replace 5000 with your desired duration in milliseconds
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowEndCallButton(false);
+    }
   }, [callState]);
 
   const handleAnswerCall = () => {
@@ -196,13 +257,17 @@ const WelcomePage = () => {
         )}
 
         {callState === 'incoming' && (
-          <div className="bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 w-full max-w-md shadow-2xl border border-gray-700 transition-all animate-fade-in-up">
+          <div
+            className="bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 w-full max-w-md shadow-2xl border border-gray-700 transition-all animate-fade-in-up"
+          >
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-2xl shadow-lg">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
+                <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl shadow-lg overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #f5c6aa, #d68c6c)' }}>
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="ml-5">
                   <h2 className="text-xl font-semibold">Webhunt</h2>
@@ -213,18 +278,7 @@ const WelcomePage = () => {
                 </div>
               </div>
             </div>
-            
-            <div className="flex justify-between mt-8">
-              <Button 
-                variant="destructive" 
-                className="rounded-full w-16 h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 transition-transform duration-300 transform hover:scale-105 hover:rotate-12"
-                onClick={() => setCallState('ended')}
-              >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </Button>
-              
+            <div className="flex justify-center mt-8">
               <Button 
                 className="bg-green-600 hover:bg-green-700 rounded-full w-16 h-16 flex items-center justify-center transition-transform duration-300 transform hover:scale-105 hover:rotate-12"
                 onClick={handleAnswerCall}
@@ -241,10 +295,12 @@ const WelcomePage = () => {
           <div className="bg-gray-800/70 backdrop-blur-sm rounded-3xl p-8 w-full max-w-md shadow-2xl border border-gray-700 transition-all animate-fade-in">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-2xl shadow-lg pulse-animation">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
+                <div className="w-20 h-20 rounded-full flex items-center justify-center text-2xl shadow-lg overflow-hidden" style={{ background: 'linear-gradient(to bottom right, #f5c6aa, #d68c6c)' }}>
+                  <img 
+                    src={profileImage} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <div className="ml-5">
                   <h2 className="text-xl font-semibold">Webhunt</h2>
@@ -255,40 +311,29 @@ const WelcomePage = () => {
                 </div>
               </div>
             </div>
-            
-            <div className="flex justify-center mt-8 space-x-4">
-              {/* Audio wave animation */}
-              <div className="flex items-center justify-center h-10 space-x-1 mb-8">
-                <div className="w-1 h-6 bg-green-500 rounded-full animate-soundwave"></div>
-                <div className="w-1 h-10 bg-green-500 rounded-full animate-soundwave" style={{animationDelay: '0.2s'}}></div>
-                <div className="w-1 h-8 bg-green-500 rounded-full animate-soundwave" style={{animationDelay: '0.4s'}}></div>
-                <div className="w-1 h-4 bg-green-500 rounded-full animate-soundwave" style={{animationDelay: '0.6s'}}></div>
-                <div className="w-1 h-10 bg-green-500 rounded-full animate-soundwave" style={{animationDelay: '0.8s'}}></div>
-                <div className="w-1 h-6 bg-green-500 rounded-full animate-soundwave" style={{animationDelay: '1s'}}></div>
+            {showEndCallButton && (
+              <div className="flex justify-center mt-4">
+                <Button 
+                  variant="destructive" 
+                  className="rounded-full w-16 h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 transition-transform duration-300 transform hover:scale-105"
+                  onClick={() => {
+                    if (audioRef.current) audioRef.current.pause();
+                    setCallState('ended');
+                  }}
+                >
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </Button>
               </div>
-            </div>
-            
-            <div className="flex justify-center mt-4">
-              <Button 
-                variant="destructive" 
-                className="rounded-full w-16 h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 transition-transform duration-300 transform hover:scale-105"
-                onClick={() => {
-                  if (audioRef.current) audioRef.current.pause();
-                  setCallState('ended');
-                }}
-              >
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </Button>
-            </div>
+            )}
           </div>
         )}
 
         {callState === 'ended' && (
           <div className="text-center bg-gray-800/50 backdrop-blur-sm p-10 rounded-2xl border border-gray-700 shadow-2xl transition-all animate-fade-in">
             <svg className="w-20 h-20 mx-auto mb-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 9 9 0 11-18 0 9 9 9 0 0118 0z"></path>
             </svg>
             <h2 className="text-3xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500">Call Ended</h2>
             <p className="mb-8 text-xl text-gray-300">Are you ready for the challenge?</p>
