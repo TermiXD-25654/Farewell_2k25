@@ -128,11 +128,9 @@ const WelcomePage = () => {
 
   useEffect(() => {
     if (callState === 'active') {
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setShowEndCallButton(true);
       }, 27000); // Replace 5000 with your desired duration in milliseconds
-
-      return () => clearTimeout(timer);
     } else {
       setShowEndCallButton(false);
     }
