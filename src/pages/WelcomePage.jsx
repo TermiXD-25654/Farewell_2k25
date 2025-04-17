@@ -130,7 +130,7 @@ const WelcomePage = () => {
     if (callState === 'active') {
       const timer = setTimeout(() => {
         setShowEndCallButton(true);
-      }, 5000); // Replace 5000 with your desired duration in milliseconds
+      }, 27000); // Replace 5000 with your desired duration in milliseconds
 
       return () => clearTimeout(timer);
     } else {

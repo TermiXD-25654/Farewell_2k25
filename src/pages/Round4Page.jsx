@@ -7,8 +7,8 @@ import { updateProgress } from '../api.js'; // 👈 import API function
 
 // These values will be provided by you later
 const ROUND_4_CONFIG = {
-  encryptedMessage: "b'gAAAAABoAB-Av3v3zZpHQzCi_r33n3kztO4iaDG53KFIOJuvVBbh51E-BuAf5IzlhayVX87wq-5UXAlbDCoqAeNdlyTVnVRA31MnRVCQswJhgBBqwAFOu07MWmZ-2Vn1Q9nRYW7XeolJ'", // Example binary message
-  correctAnswer: 'Asla Hum bhi rakhte hai LADDAR', // Example decoded answer
+  encryptedMessage: "b'gAAAAABoAM-YDrB5yGVWBHP-tiyndxDhW1KIlTul1yxjwWsS4I6VALfZN0dzVFaIU6E251qIGLafCaAPGt9Prq1tK1QlKtLm5YkSz22Rmard0cOfPdrFRnqtlY1Aj9EvusKXPpeox48H'", // Example binary message
+  correctAnswer: 'Asla hum bhi rakhte hai LADDAR', // Example decoded answer
   buttonsEscapeAttempts: 30 // After this many attempts, the button will stop moving
 };
 

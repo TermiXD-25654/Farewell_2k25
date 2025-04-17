@@ -16,7 +16,7 @@ const ROUND_2_CONFIG = {
   // You can replace this with your actual puzzle width and height
   gridSize: 3, // 3x3 grid (8 tiles + 1 empty space)
   // Add the secret pin here
-  secretPin: "1234", // You can change this to any pin you want
+  secretPin: "_D5NetMJFLZOhy4vlDMsnQlRJ1DNAQsjaRMxm4VuHCs=", // You can change this to any pin you want
 };
 
 // Helper to check if puzzle is solved
