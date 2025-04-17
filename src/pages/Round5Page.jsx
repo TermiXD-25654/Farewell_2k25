@@ -81,7 +81,7 @@ const Round5Page = () => {
   };
 
   const handleNextRound = () => {
-    navigate("/round6");
+    navigate("/57qWlGe6_jIQ4AW7zji1Je26");
   };
 
   return (

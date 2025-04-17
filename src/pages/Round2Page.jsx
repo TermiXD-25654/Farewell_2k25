@@ -177,7 +177,7 @@ const Round2Page = () => {
   };
 
   const handleRealNextRound = () => {
-    navigate("/round3");
+    navigate("/EEsVIGd64nP0_hl6dmgsTXqe7");
   };
 
   const toggleHint = () => {

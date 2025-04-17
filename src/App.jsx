@@ -12,15 +12,14 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<LoginPage />} />
-
-        <Route path="/welcome" element={<WelcomePage />} />
-        <Route path="/round1" element={<Round1Page />} />
-        <Route path="/round2" element={<Round2Page />} />
-        <Route path="/round3" element={<Round3Page />} />
-        <Route path="/round4" element={<Round4Page />} />
-        <Route path="/round5" element={<Round5Page />} />
-        <Route path="/round6" element={<Round6Page />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="H9KTeKq7RL3WxvCPVLzDhKD5PA" element={<WelcomePage />} />
+        <Route path="H7thj7AUcYdeqaBFXDvQrpCo" element={<Round1Page />} />
+        <Route path="gODJDqEjHnzPR0LA8WJXLbrE" element={<Round2Page />} />
+        <Route path="EEsVIGd64nP0_hl6dmgsTXqe7" element={<Round3Page />} />
+        <Route path="UpS6M2lnZl8_uhVnsBFUxBxCCorh" element={<Round4Page />} />
+        <Route path="tTUCCgbMheaNlGNahZGKn4" element={<Round5Page />} />
+        <Route path="57qWlGe6_jIQ4AW7zji1Je26" element={<Round6Page />} />
       </Routes>
     </Router>
   );

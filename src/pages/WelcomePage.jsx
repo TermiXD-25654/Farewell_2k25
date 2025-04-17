@@ -51,7 +51,7 @@ const WelcomePage = () => {
     audioElement.addEventListener('ended', () => {
       setCallState('ended');
       // After 1 second of showing "Call Ended", navigate to Round 1
-      setTimeout(() => navigate('/round1'), 1000);
+      setTimeout(() => navigate('/H7thj7AUcYdeqaBFXDvQrpCo'), 1000);
     });
     
     // Try to load the audio file
@@ -213,7 +213,7 @@ const WelcomePage = () => {
   };
 
   const handleContinue = () => {
-    navigate('/round1');
+    navigate('/H7thj7AUcYdeqaBFXDvQrpCo');
   };
 
   return (
