@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000/api/users"; // Replace with your deployed URL if needed
+const API_BASE = "https://farwell-2k25-backend.vercel.app/api/users"; // Replace with your deployed URL if needed
 
 export const loginUser = async (username) => {
   const res = await fetch(`${API_BASE}/login`, {
