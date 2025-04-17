@@ -14,7 +14,7 @@ const LoginPage = () => {
 
     try {
       const userData = await loginUser(username);
-      localStorage.setItem("user", username); // Save entire user data
+      localStorage.setItem("username", username); // Save entire user data
       navigate("/welcome"); // Redirect as needed
     } catch (err) {
       setError("Login failed. Try again.");
