@@ -126,7 +126,7 @@ const Round6Page = () => {
           
           <div className={`transition-all duration-1000 delay-300 transform ${celebrationStage >= 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
             <p className="text-3xl mb-8 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300">
-              You've Completed All Challenges!
+             Scan this final QR to continue!! 
             </p>
           </div>
         </div>

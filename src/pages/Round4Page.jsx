@@ -8,7 +8,7 @@ import qr from '../assets/qr-code.png';
 const ROUND_4_CONFIG = {
   encryptedMessage: "b'gAAAAABoAB-Av3v3zZpHQzCi_r33n3kztO4iaDG53KFIOJuvVBbh51E-BuAf5IzlhayVX87wq-5UXAlbDCoqAeNdlyTVnVRA31MnRVCQswJhgBBqwAFOu07MWmZ-2Vn1Q9nRYW7XeolJ'", // Example binary message
   correctAnswer: 'Asla Hum bhi rakhte hai, LADDAR!', // Example decoded answer
-  buttonsEscapeAttempts: 20 // After this many attempts, the button will stop moving
+  buttonsEscapeAttempts: 30 // After this many attempts, the button will stop moving
 };
 
 const Round4Page = () => {
