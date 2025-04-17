@@ -2,12 +2,14 @@ import React from 'react';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
+import qr from '../assets/qr-code.png';
+import { updateProgress } from '../api.js'; // 👈 import API function
 
 // These values will be provided by you later
 const ROUND_4_CONFIG = {
   encryptedMessage: "b'gAAAAABoAB-Av3v3zZpHQzCi_r33n3kztO4iaDG53KFIOJuvVBbh51E-BuAf5IzlhayVX87wq-5UXAlbDCoqAeNdlyTVnVRA31MnRVCQswJhgBBqwAFOu07MWmZ-2Vn1Q9nRYW7XeolJ'", // Example binary message
-  correctAnswer: 'Asla Hum bhi rakhte hai, LADDAR!', // Example decoded answer
-  buttonsEscapeAttempts: 20 // After this many attempts, the button will stop moving
+  correctAnswer: 'Asla Hum bhi rakhte hai LADDAR', // Example decoded answer
+  buttonsEscapeAttempts: 30 // After this many attempts, the button will stop moving
 };
 
 const Round4Page = () => {
@@ -21,14 +23,29 @@ const Round4Page = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (userAnswer.trim().toLowerCase() === ROUND_4_CONFIG.correctAnswer.toLowerCase()) {
       setIsCorrect(true);
-      setTimeout(() => {
-        setShowNextButton(true);
-      }, 1000);
+
+      try {
+    
+        await updateProgress( 4, 'completed'); // 👈 API call
+        setTimeout(() => {
+          setShowCongrats(true);
+        }, 500);
+
+        setTimeout(() => {
+          setShowNextButton(true);
+        }, 1000);
+      } catch (error) {
+
+        setIsCorrect(false);
+        console.error('Failed to update progress:', error);
+        alert('Something went wrong while saving your progress.');
+      }
     } else {
       setAttempts(prev => prev + 1);
       setUserAnswer('');
@@ -98,7 +115,7 @@ const Round4Page = () => {
                 <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
                   <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
                   <img 
-                    src="/src/assets/round4-qr-code.jpg" 
+                    src= {qr}
                     alt="QR Code" 
                     className="w-full h-full object-cover rounded-lg"
                   />

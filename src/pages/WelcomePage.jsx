@@ -8,8 +8,6 @@ import incomingRingtone from '../assets/incoming-call-tone.mp3'; // Audio file f
 // Use the imported audio file directly
 const VOICE_MESSAGE_URL = welcomeCallAudio;
 
-// Log the audio URL to verify it's correct
-console.log('Audio file URL:', VOICE_MESSAGE_URL);
 
 const WelcomePage = () => {
   const [callState, setCallState] = useState(null);
@@ -20,11 +18,11 @@ const WelcomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Initial callState:', callState);
+
     
     // Simulate incoming call after a short delay
     const timer = setTimeout(() => {
-      console.log('Setting callState to incoming');
+
       setCallState('incoming');
     }, 1500);
 
@@ -35,24 +33,18 @@ const WelcomePage = () => {
     
     // Add more detailed logging for audio loading
     audioElement.addEventListener('canplaythrough', () => {
-      console.log('Audio loaded and can play through');
+
       setAudioReady(true);
     });
     
-    audioElement.addEventListener('loadeddata', () => {
-      console.log('Audio data loaded successfully');
-    });
-    
+   
     audioElement.addEventListener('error', (e) => {
-      console.error('Audio loading error:', e);
-      console.error('Audio error code:', audioElement.error ? audioElement.error.code : 'unknown');
-      console.error('Audio src:', audioElement.src);
-      
+    
       // Try to recover by creating an alternative audio element
       setTimeout(() => {
         const altAudio = new Audio(VOICE_MESSAGE_URL);
         audioRef.current = altAudio;
-        console.log('Created alternative audio element');
+  
       }, 1000);
     });
     
@@ -71,7 +63,7 @@ const WelcomePage = () => {
     const enableAudio = () => {
       const silentAudio = new Audio("data:audio/mp3;base64,SUQzBA...");
       silentAudio.play().then(() => {
-        console.log('Audio context unlocked by user interaction');
+
         // Now that audio context is unlocked, play the ringtone if available
         if (ringtoneRef.current) {
           ringtoneRef.current.play().catch(() => {
@@ -118,7 +110,7 @@ const WelcomePage = () => {
       const playPromise = ringtoneRef.current?.play();
       if (playPromise && typeof playPromise.catch === 'function') {
         playPromise.catch(() => {
-          console.log('Ringtone play was blocked; will retry on user interaction');
+      
           const retryRingtone = () => {
             ringtoneRef.current?.play().catch(() => {});
             document.removeEventListener('click', retryRingtone);
@@ -134,11 +126,6 @@ const WelcomePage = () => {
     }
   }, [callState]);
 
-  // Log state changes
-  useEffect(() => {
-    console.log('Current callState:', callState);
-  }, [callState]);
-
   useEffect(() => {
     if (callState === 'active') {
       const timer = setTimeout(() => {
@@ -152,7 +139,6 @@ const WelcomePage = () => {
   }, [callState]);
 
   const handleAnswerCall = () => {
-    console.log('Call answered, setting state to active');
     setCallState('active');
     if (audioRef.current) {
       // Try to play the audio with better error handling
@@ -160,8 +146,6 @@ const WelcomePage = () => {
       
       // Add volume control to ensure it's audible
       audioRef.current.volume = 1.0;
-      
-      console.log('Attempting to play audio...');
       
       const playPromise = audioRef.current.play();
       
