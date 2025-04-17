@@ -2,15 +2,23 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button.jsx";
 import { Gamepad, Bomb } from "lucide-react";
+import { loginUser } from "../api.js"; // ⬅️ Import API
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username.trim()) {
-      localStorage.setItem("username", username);
-      navigate("/welcome"); // Update as needed
+  const handleLogin = async () => {
+    if (!username.trim()) return;
+
+    try {
+      const userData = await loginUser(username);
+      localStorage.setItem("user", JSON.stringify(userData)); // Save entire user data
+      navigate("/welcome"); // Redirect as needed
+    } catch (err) {
+      setError("Login failed. Try again.");
+      console.error(err);
     }
   };
 
@@ -48,6 +56,8 @@ const LoginPage = () => {
         >
           🚀 Let’s Go!
         </Button>
+
+        {error && <p className="mt-4 text-center text-red-400">{error}</p>}
       </div>
 
       {/* Footer */}

@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
 import qr from '../assets/qr-code.png';
+import { updateProgress } from '../api.js'; // 👈 import API function
 
 // These values will be provided by you later
 const ROUND_4_CONFIG = {
@@ -22,14 +23,29 @@ const Round4Page = () => {
   const buttonRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (userAnswer.trim().toLowerCase() === ROUND_4_CONFIG.correctAnswer.toLowerCase()) {
       setIsCorrect(true);
-      setTimeout(() => {
-        setShowNextButton(true);
-      }, 1000);
+
+      try {
+    
+        await updateProgress( 4, 'completed'); // 👈 API call
+        setTimeout(() => {
+          setShowCongrats(true);
+        }, 500);
+
+        setTimeout(() => {
+          setShowNextButton(true);
+        }, 1000);
+      } catch (error) {
+
+        setIsCorrect(false);
+        console.error('Failed to update progress:', error);
+        alert('Something went wrong while saving your progress.');
+      }
     } else {
       setAttempts(prev => prev + 1);
       setUserAnswer('');
