@@ -116,7 +116,7 @@ const Round2Page = () => {
 
     // Load the image to get its natural dimensions
     const img = new Image();
-    img.src = ROUND_2_CONFIG.imagePath;
+    img.src = puzzleImage;
     img.onload = () => {
       const ratio = img.naturalWidth / img.naturalHeight;
       setImageAspectRatio(ratio);
@@ -347,7 +347,7 @@ const Round2Page = () => {
                         {qrScanned ? (
                           <div className="relative overflow-hidden rounded-lg mb-6">
                             <img
-                              src={ROUND_2_CONFIG.imagePath}
+                              src={puzzleImage}
                               alt="Complete puzzle image"
                               className="w-full object-contain"
                               ref={imageRef}
@@ -405,7 +405,7 @@ const Round2Page = () => {
                             style={{
                               backgroundImage: isEmptyTile
                                 ? "none"
-                                : `url(${ROUND_2_CONFIG.imagePath})`,
+                                : `url(${puzzleImage})`,
                               backgroundSize: `${gridSize * 100}%`,
                               backgroundPosition: `${backgroundPositionX}% ${backgroundPositionY}%`,
                             }}
