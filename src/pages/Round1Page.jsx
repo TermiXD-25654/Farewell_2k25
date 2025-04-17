@@ -12,7 +12,6 @@ const ROUND_1_CONFIG = {
     'The first emoji represents your head',
     'The last emoji is about observation',
   ],
-  maxAttemptsBeforeHint: 3,
 };
 
 const Round1Page = () => {
@@ -45,11 +44,6 @@ const Round1Page = () => {
     }
   };
 
-  useEffect(() => {
-    if (attempts >= ROUND_1_CONFIG.maxAttemptsBeforeHint && !showHint) {
-      setShowHint(true);
-    }
-  }, [attempts, showHint]);
 
   const handleHintClick = () => {
     setCurrentHintIndex((prev) => (prev + 1) % ROUND_1_CONFIG.hints.length);
