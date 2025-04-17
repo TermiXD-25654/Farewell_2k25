@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button.jsx';
 import Confetti from 'react-confetti';
 // Import the puzzle image
 import puzzleImage from '../assets/puzzle-image.jpg';
+import qr from '../assets/qr-code.png';
 
 // This will be provided by you later
 const ROUND_2_CONFIG = {
@@ -138,13 +139,13 @@ const Round2Page = () => {
     // Show the real button after a delay
     setTimeout(() => {
       setShowLOL(true);
-    }, 20000);
+    }, 10000);
 
     setTimeout(() => {
       setShowFakeError(false);
      
       setShowRealButton(true);
-    }, 25000);
+    }, 15000);
 
     
 
@@ -202,7 +203,7 @@ const Round2Page = () => {
               <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
                 <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
                 <img 
-                  src="/src/assets/round2-qr-code.jpg" 
+                  src={qr} 
                   alt="QR Code" 
                   className="w-full h-full object-cover rounded-lg"
                   onClick={handleQrScanSuccess}

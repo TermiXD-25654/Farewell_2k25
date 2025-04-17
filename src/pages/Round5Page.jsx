@@ -2,6 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
+import qr from '../assets/qr-code.png';
+import clueImage from '../assets/round5-image.jpg';
 
 // These values will be provided by you later
 const ROUND_5_CONFIG = {
@@ -99,7 +101,7 @@ const Round5Page = () => {
               <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
                 <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
                 <img 
-                  src="/src/assets/round5-qr-code.jpg" 
+                  src={qr} 
                   alt="QR Code" 
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -121,7 +123,7 @@ const Round5Page = () => {
               <div className="relative group mb-6">
                 <div className="flex justify-center items-center">
                   <img 
-                    src={ROUND_5_CONFIG.imagePath} 
+                    src={clueImage} 
                     alt="Challenge" 
                     className="w-3/4 h-auto rounded-xl shadow-lg border border-purple-500/20 group-hover:border-purple-500/40 transition-all"
                   />
@@ -208,7 +210,7 @@ const Round5Page = () => {
               <div className="relative group mb-6">
                 <div className="flex justify-center items-center">
                   <img 
-                    src={ROUND_5_CONFIG.imagePath} 
+                    src={clueImage} 
                     alt="Challenge" 
                     className="w-3/4 h-auto rounded-xl shadow-lg border border-green-500/20 group-hover:border-green-500/40 transition-all"
                   />

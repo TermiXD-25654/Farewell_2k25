@@ -2,11 +2,12 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
+import qr from '../assets/qr-code.png';
 
 // These values will be provided by you later
 const ROUND_1_CONFIG = {
   puzzleEmojis: '🙏🏻 💦🤰 EMR ⚰ 💀', // Example emoji puzzle
-  correctAnswer: 'WELCOME TO EMR FAREWELL 2025', // Example answer
+  correctAnswer: 'WELCOME TO EMR FAREWELL 2025', // Example answer
   hints: [
     'Think about what you use to solve puzzles',
     'The first emoji represents your head',
@@ -89,7 +90,7 @@ const Round1Page = () => {
               <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
                 <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
                 <img 
-                  src="/src/assets/round1-qr-code.jpg" 
+                  src={qr} 
                   alt="QR Code" 
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -142,27 +143,7 @@ const Round1Page = () => {
                 </div>
               </div>
             )}
-            
-            {showHint && (
-              <div className="mt-6 p-6 bg-purple-900/40 rounded-xl w-full max-w-md mx-auto border border-purple-700/50 animate-fade-in">
-                <p className="font-semibold mb-3 text-purple-300 flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                  Hint:
-                </p>
-                <p className="text-gray-300">{ROUND_1_CONFIG.hints[currentHintIndex]}</p>
-                {ROUND_1_CONFIG.hints.length > 1 && (
-                  <Button 
-                    variant="outline" 
-                    className="mt-4 border-purple-600/50 text-purple-300 hover:bg-purple-800/30 transition-all"
-                    onClick={handleHintClick}
-                  >
-                    Next Hint
-                  </Button>
-                )}
-              </div>
-            )}
+
           </div>
         ) : (
           <div className="text-center bg-gray-800/40 backdrop-blur-md p-10 rounded-2xl border border-green-500/30 shadow-2xl animate-fade-in">

@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button.jsx';
 import croreAudio from '../assets/crore.mp3';
+import clueImage from '../assets/round5-image.jpg';
+import qr from '../assets/qr-code.png';
+import gameQR from '../assets/game-qr.jpeg';
 
 // CSS-based confetti instead of react-confetti package
 const CSSConfetti = () => {
@@ -105,40 +108,6 @@ const Round6Page = () => {
       {/* Show CSS confetti animation */}
       {showConfetti && <CSSConfetti />}
       
-      {/* Hint button */}
-      <div className="absolute top-4 right-4">
-        <button 
-          className="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg flex items-center justify-center transition-transform transform hover:scale-110 focus:outline-none focus:crore-4 focus:crore-indigo-300 hover:shadow-indigo-500/50"
-          onClick={() => setShowHint(true)}
-        >
-          <span className="text-2xl text-white animate-pulse">💡</span>
-        </button>
-      </div>
-
-      {showHint && (
-        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full relative">
-            <Button 
-              variant="destructive" 
-              className="absolute top-4 right-4"
-              onClick={() => setShowHint(false)}
-            >
-              Close
-            </Button>
-            <h3 className="text-2xl font-bold mb-4 text-purple-300">Scan the QR Code</h3>
-            <div className="flex justify-center items-center">
-              <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
-                <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
-                <img 
-                  src="/src/assets/round6-qr-code.jpg" 
-                  alt="QR Code" 
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       
       {/* Background animated elements */}
       <div className="absolute inset-0 overflow-hidden z-0">
@@ -202,7 +171,7 @@ const Round6Page = () => {
               <div className="relative w-1/4 h-1/4 border-4 border-dashed border-green-500 rounded-lg">
                 <div className="absolute inset-0 animate-scan-line bg-gradient-to-b from-transparent via-green-500/50 to-transparent"></div>
                 <img 
-                  src="/src/assets/round5-image.jpg" 
+                  src= {gameQR} 
                   alt="QR Code" 
                   className="w-full h-full object-cover rounded-lg"
                 />
