@@ -103,7 +103,7 @@ const Round1Page = () => {
       <div className="z-10 max-w-4xl w-full">
         {!showCongrats ? (
           <div className="bg-gray-800/40 backdrop-blur-md rounded-2xl p-8 border border-purple-900/50 shadow-2xl animate-fade-in">
-            <h1 className="text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-300">
+            <h1 className="p-2 text-5xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-300">
               Round 1: Emoji Puzzle
             </h1>
             
@@ -153,7 +153,7 @@ const Round1Page = () => {
               </svg>
             </div>
             
-            <h2 className="text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-300">Congratulations! 🎉</h2>
+            <h2 className="p-4 text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-300">Congratulations! 🎉</h2>
             <p className="text-xl mb-8 text-gray-300">You've solved the emoji puzzle!</p>
             
             <Button 

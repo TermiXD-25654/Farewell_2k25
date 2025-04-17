@@ -64,7 +64,7 @@ const Round2Page = () => {
   const emptyTileIndex = totalTiles - 1; // The last tile is the empty one
   
   const [tiles, setTiles] = useState([]);
-  const [completed, setCompleted] = useState(true);
+  const [completed, setCompleted] = useState(false);
   const [showLOL, setShowLOL] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showFakeError, setShowFakeError] = useState(false);

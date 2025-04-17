@@ -8,7 +8,7 @@ import clueImage from '../assets/round5-image.jpg';
 // These values will be provided by you later
 const ROUND_5_CONFIG = {
   imagePath: '/src/assets/round5-image.jpg', // Corrected path to the image
-  correctAnswer: 'EMR_Domains', // The answer to the image puzzle
+  correctAnswer: 'EMR Domains', // The answer to the image puzzle
   freezeDuration: 30000 // Duration in milliseconds (30 seconds) to simulate website not responding
 };
 
@@ -248,7 +248,7 @@ const Round5Page = () => {
               </svg>
             </div>
             
-            <h2 className="text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-300">Congratulations! 🎉</h2>
+            <h2 className="p-2 text-4xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-300">Congratulations! 🎉</h2>
             <p className="text-xl mb-10 text-gray-300">You've completed the image challenge!</p>
             
             <Button 
